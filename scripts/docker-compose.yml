@@ -50,6 +50,7 @@ services:
             DB_DATABASE: ireceptor
         volumes:
             - loadingvolume:/scratch
+        restart: "no"
 
     ireceptor-performance-testing:
         labels:

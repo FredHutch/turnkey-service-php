@@ -25,6 +25,8 @@ services:
         image: ireceptor/service-php-mongodb:turnkey-v3
         labels:
           io.rancher.container.pull_image: always
+          name: "scicomp-ext-a1"
+          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
         environment:
             DB_HOST: ireceptor-database
             DB_DATABASE: ireceptor
@@ -53,6 +55,8 @@ services:
     ireceptor-performance-testing:
         labels:
           io.rancher.container.pull_image: always
+          name: "scicomp-ext-a1"
+          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
         # image tag hardcoded:
         image: ireceptor/dataloading-mongo:turnkey-v3-performance
         environment:

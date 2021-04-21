@@ -13,6 +13,6 @@ deploy:
   stage: deploy
   only:
     refs:
-        - master
+        - production-v3
   script:
     - rancher-v0.6.2/rancher --url https://ponderosa.fhcrc.org --access-key $RANCHERAPI_KEY --secret-key $RANCHERAPI_SECRET up -d --pull --force-upgrade --confirm-upgrade --stack turnkey-service-php --file scripts/docker-compose.yml --rancher-file rancher-compose.yml

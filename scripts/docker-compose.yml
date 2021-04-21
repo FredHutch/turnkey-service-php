@@ -49,8 +49,7 @@ services:
             DB_HOST: ireceptor-database
             DB_DATABASE: ireceptor
         volumes:
-            # host path hardcoded:
-            - /tmp:/scratch
+            - loadingvolume:/scratch
 
     ireceptor-performance-testing:
         labels:
@@ -64,3 +63,6 @@ services:
             DB_DATABASE: ireceptor
             DB_SAMPLES_COLLECTION: sample
             DB_SEQUENCES_COLLECTION: sequence
+
+volumes:
+  loadingvolume: {}

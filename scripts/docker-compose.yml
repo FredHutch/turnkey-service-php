@@ -14,7 +14,7 @@ services:
           name: "scicomp-ext-a1"
           io.rancher.scheduler.affinity:host_label: name=scicomp-a1
         volumes:
-            - ../.mongodb_data:/data/db
+            - mongodb_data:/data/db
         environment:
             MONGO_INITDB_DATABASE: ireceptor
 
@@ -66,3 +66,5 @@ services:
 
 volumes:
   loadingvolume: {}
+  mongodb_data: {}
+

@@ -1,4 +1,6 @@
-version: '3'
+# IMPORTANT: Version needs to be '2' for deployment
+# though it is '3' in upstream repos
+version: '2'
 
 services:
 

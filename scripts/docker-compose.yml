@@ -4,6 +4,10 @@ services:
 
     ireceptor-database:
         image: ireceptor/repository-mongodb:${DATABASE_TAG:-turnkey-v3}
+        labels:
+          io.rancher.container.pull_image: always
+          name: "scicomp-ext-a1"
+          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
         volumes:
             - ../.mongodb_data:/data/db
         environment:
@@ -13,6 +17,8 @@ services:
         depends_on:
             - ireceptor-database
         image: ireceptor/service-php-mongodb:${API_TAG:-turnkey-v3}
+        labels:
+          io.rancher.container.pull_image: always
         environment:
             DB_HOST: ireceptor-database
             DB_DATABASE: ireceptor
@@ -22,6 +28,10 @@ services:
             - ${API_PORT:-80}:80
 
     ireceptor-dataloading:
+        labels:
+          io.rancher.container.pull_image: always
+          name: "scicomp-ext-a1"
+          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
         depends_on:
             - ireceptor-database
         image: ireceptor/dataloading-mongo:${DATALOADING_TAG:-turnkey-v3-dataloading}
@@ -32,6 +42,8 @@ services:
             - ${FILE_FOLDER:-/tmp}:/scratch
 
     ireceptor-performance-testing:
+        labels:
+          io.rancher.container.pull_image: always
         image: ireceptor/dataloading-mongo:${PERFORMANCE_TESTING_TAG:-turnkey-v3-performance}
         environment:
             DB_HOST: ireceptor-database

@@ -53,18 +53,19 @@ services:
     #         - loadingvolume:/scratch
     #     restart: "no"
 
-    ireceptor-performance-testing:
-        labels:
-          io.rancher.container.pull_image: always
-          name: "scicomp-ext-a1"
-          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
-        # image tag hardcoded:
-        image: ireceptor/dataloading-mongo:turnkey-v3-performance
-        environment:
-            DB_HOST: ireceptor-database
-            DB_DATABASE: ireceptor
-            DB_SAMPLES_COLLECTION: sample
-            DB_SEQUENCES_COLLECTION: sequence
+    # also, this is apparently not normally needed:
+    # ireceptor-performance-testing:
+    #     labels:
+    #       io.rancher.container.pull_image: always
+    #       name: "scicomp-ext-a1"
+    #       io.rancher.scheduler.affinity:host_label: name=scicomp-a1
+    #     # image tag hardcoded:
+    #     image: ireceptor/dataloading-mongo:turnkey-v3-performance
+    #     environment:
+    #         DB_HOST: ireceptor-database
+    #         DB_DATABASE: ireceptor
+    #         DB_SAMPLES_COLLECTION: sample
+    #         DB_SEQUENCES_COLLECTION: sequence
 
 volumes:
   loadingvolume: {}

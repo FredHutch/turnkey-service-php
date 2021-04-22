@@ -37,20 +37,21 @@ services:
             # 8033
             - 8033:80
 
-    ireceptor-dataloading:
-        labels:
-          io.rancher.container.pull_image: always
-          name: "scicomp-ext-a1"
-          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
-        depends_on:
-            - ireceptor-database
-        image: ireceptor/dataloading-mongo:turnkey-v3-dataloading
-        environment:
-            DB_HOST: ireceptor-database
-            DB_DATABASE: ireceptor
-        volumes:
-            - loadingvolume:/scratch
-        restart: "no"
+    # commenting out the dataloading container for now
+    # ireceptor-dataloading:
+    #     labels:
+    #       io.rancher.container.pull_image: always
+    #       name: "scicomp-ext-a1"
+    #       io.rancher.scheduler.affinity:host_label: name=scicomp-a1
+    #     depends_on:
+    #         - ireceptor-database
+    #     image: ireceptor/dataloading-mongo:turnkey-v3-dataloading
+    #     environment:
+    #         DB_HOST: ireceptor-database
+    #         DB_DATABASE: ireceptor
+    #     volumes:
+    #         - loadingvolume:/scratch
+    #     restart: "no"
 
     ireceptor-performance-testing:
         labels:

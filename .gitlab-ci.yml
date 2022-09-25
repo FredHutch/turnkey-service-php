@@ -32,9 +32,6 @@ deploy:
   only:
     refs:
         - production-v3
-# TODO REMOVE THIS vvvv !
-        - migrate-to-swarm
-# TODO REMOVE THIS ^^^^ !
   script:
     - sleep 15
     - echo $SC_SWARM_CICD_SSH_KEY | base64 -d > ./sc_swarm_cicd_ssh_key

@@ -22,6 +22,8 @@ services:
     ireceptor-api:
         depends_on:
             - ireceptor-database
+        networks:
+        - proxy
         # image tag hardcoded:
         image: ireceptor/service-php-mongodb:turnkey-v3
         deploy:

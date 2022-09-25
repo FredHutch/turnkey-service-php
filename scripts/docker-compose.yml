@@ -1,20 +1,21 @@
-# IMPORTANT: Version needs to be '2' for deployment
-# though it is '3' in upstream repos
-version: '2'
+version: '3.3'
 
 services:
 
     ireceptor-database:
+        networks:
+        - proxy
     # the interpolation in the upstream docker-compose.yml does not
     # seem to work in this version of docker-compose, so the image tags
     # are hardcoded here.
         image: ireceptor/repository-mongodb:turnkey-v3
-        labels:
-          io.rancher.container.pull_image: always
-          name: "scicomp-ext-a1"
-          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
+        deploy:
+            placement:
+                constraints: [node.hostname == sc-swarm-06]
+            restart_policy:
+                condition: on-failure
         volumes:
-            - mongodb_data:/data/db
+            - ireceptor_turnkey_mongodb_data:/data/db
         environment:
             MONGO_INITDB_DATABASE: ireceptor
 
@@ -23,51 +24,27 @@ services:
             - ireceptor-database
         # image tag hardcoded:
         image: ireceptor/service-php-mongodb:turnkey-v3
-        labels:
-          io.rancher.container.pull_image: always
-          name: "scicomp-ext-a1"
-          io.rancher.scheduler.affinity:host_label: name=scicomp-a1
+        deploy:
+            placement:
+                constraints: [node.hostname == sc-swarm-06]
+            labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.turnkey-service-php.rule=Host(`ireceptor0.fredhutch.org`)"
+                - "traefik.http.routers.turnkey-service-php-secured.rule=Host(`ireceptor0.fredhutch.org`)"
+                - "traefik.http.routers.turnkey-service-php.entrypoints=web,web-secured"
+                - "traefik.http.services.turnkey-service-php.loadbalancer.server.port=80" # it seems you always need to give traefik a port so it 'notices' the service
+                - "traefik.http.routers.turnkey-service-php.tls=true"
         environment:
             DB_HOST: ireceptor-database
             DB_DATABASE: ireceptor
             DB_SAMPLES_COLLECTION: sample
             DB_SEQUENCES_COLLECTION: sequence
-        ports:
-            # interpolated host port hardcoded, changed from 80 to
-            # 8033
-            - 8033:80
 
-    # commenting out the dataloading container for now
-    # ireceptor-dataloading:
-    #     labels:
-    #       io.rancher.container.pull_image: always
-    #       name: "scicomp-ext-a1"
-    #       io.rancher.scheduler.affinity:host_label: name=scicomp-a1
-    #     depends_on:
-    #         - ireceptor-database
-    #     image: ireceptor/dataloading-mongo:turnkey-v3-dataloading
-    #     environment:
-    #         DB_HOST: ireceptor-database
-    #         DB_DATABASE: ireceptor
-    #     volumes:
-    #         - loadingvolume:/scratch
-    #     restart: "no"
-
-    # also, this is apparently not normally needed:
-    # ireceptor-performance-testing:
-    #     labels:
-    #       io.rancher.container.pull_image: always
-    #       name: "scicomp-ext-a1"
-    #       io.rancher.scheduler.affinity:host_label: name=scicomp-a1
-    #     # image tag hardcoded:
-    #     image: ireceptor/dataloading-mongo:turnkey-v3-performance
-    #     environment:
-    #         DB_HOST: ireceptor-database
-    #         DB_DATABASE: ireceptor
-    #         DB_SAMPLES_COLLECTION: sample
-    #         DB_SEQUENCES_COLLECTION: sequence
 
 volumes:
-  loadingvolume: {}
-  mongodb_data: {}
+  ireceptor_turnkey_mongodb_data:
+    external: true
 
+networks:
+  proxy:
+    external: true

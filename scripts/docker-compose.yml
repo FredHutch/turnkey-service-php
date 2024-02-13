@@ -28,7 +28,7 @@ services:
         image: ireceptor/service-php-mongodb:turnkey-v3
         deploy:
             placement:
-                constraints: [node.hostname == sc-swarm-06]
+                constraints: [node.hostname == sc-swarm-02]
             labels:
                 - "traefik.enable=true"
                 - "traefik.http.routers.turnkey-service-php.rule=Host(`ireceptor.fredhutch.org`)"

@@ -11,7 +11,7 @@ services:
         image: ireceptor/repository-mongodb:turnkey-v3
         deploy:
             placement:
-                constraints: [node.hostname == sc-swarm-02]
+                constraints: [node.labels.persistent_data == true]
             restart_policy:
                 condition: on-failure
         volumes:
@@ -28,7 +28,7 @@ services:
         image: ireceptor/service-php-mongodb:turnkey-v3
         deploy:
             placement:
-                constraints: [node.hostname == sc-swarm-06]
+                constraints: [node.labels.persistent_data == true]
             labels:
                 - "traefik.enable=true"
                 - "traefik.http.routers.turnkey-service-php.rule=Host(`ireceptor.fredhutch.org`)"

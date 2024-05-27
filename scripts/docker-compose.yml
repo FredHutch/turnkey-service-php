@@ -10,12 +10,10 @@ services:
     # are hardcoded here.
         image: ireceptor/repository-mongodb:turnkey-v3
         deploy:
-            placement:
-                constraints: [node.labels.persistent_data == true]
             restart_policy:
                 condition: on-failure
         volumes:
-            - ireceptor_turnkey_mongodb_data:/data/db
+            - ireceptor_turnkey_mongodb_data_persistent:/data/db
         environment:
             MONGO_INITDB_DATABASE: ireceptor
 
@@ -27,8 +25,6 @@ services:
         # image tag hardcoded:
         image: ireceptor/service-php-mongodb:turnkey-v3
         deploy:
-            placement:
-                constraints: [node.labels.persistent_data == true]
             labels:
                 - "traefik.enable=true"
                 - "traefik.http.routers.turnkey-service-php.rule=Host(`ireceptor.fredhutch.org`)"
@@ -44,8 +40,12 @@ services:
 
 
 volumes:
-  ireceptor_turnkey_mongodb_data:
-    external: true
+  ireceptor_turnkey_mongodb_data_persistent:
+    driver: local
+    driver_opts:
+      type: nfs
+      device: "${PERSISTENT_VOLUME_PATH}"
+      o: addr=${NFS_SERVER},rw
 
 networks:
   proxy:
